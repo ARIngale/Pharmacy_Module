@@ -2,9 +2,9 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 from typing import List
 
-from database import get_db
-from schemas import MedicineCreate, MedicineUpdate, MedicineResponse
-from services import inventory_service
+from app.database import get_db
+from app.schemas import MedicineCreate, MedicineUpdate, MedicineResponse
+from app.services import inventory_service
 
 
 router = APIRouter()

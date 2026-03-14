@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from models import Medicine
-from schemas import MedicineCreate, MedicineUpdate
+from app.models import Medicine
+from app.schemas import MedicineCreate, MedicineUpdate
 from datetime import date
 
 
@@ -94,9 +94,14 @@ def search_medicines(db: Session, query: str):
 
 # Filter medicines by status
 def filter_medicines(db: Session, status: str):
-    return db.query(Medicine).filter(
-        Medicine.status == status
-    ).all()
+    if status == "Low Stock":
+        return db.query(Medicine).filter(Medicine.quantity < 20, Medicine.quantity > 0).all()
+
+    if status == "Out of Stock":
+        return db.query(Medicine).filter(Medicine.quantity == 0).all()
+
+    return db.query(Medicine).filter(Medicine.status == status).all()
+
 
 
 # Get low stock medicines

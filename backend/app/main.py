@@ -1,11 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from database import engine
-from models import Base
-
-# Routers
-from routers import inventory, dashboard
+from app.database import engine
+from app.models import Base
+from app.routers import inventory, dashboard
 
 
 # Create database tables

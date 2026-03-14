@@ -2,6 +2,9 @@ from pydantic import BaseModel
 from datetime import date, datetime
 from typing import Optional
 
+from pydantic import BaseModel
+from typing import Optional
+from datetime import date
 
 # Medicine Schemas
 
@@ -18,12 +21,12 @@ class MedicineCreate(MedicineBase):
 
 
 class MedicineUpdate(BaseModel):
-    name: Optional[str]
-    manufacturer: Optional[str]
-    price: Optional[float]
-    quantity: Optional[int]
-    expiry_date: Optional[date]
-    status: Optional[str]
+    name: Optional[str] = None
+    manufacturer: Optional[str] = None
+    price: Optional[float] = None
+    quantity: Optional[int] = None
+    expiry_date: Optional[date] = None
+    status: Optional[str] = None
 
 
 class MedicineResponse(MedicineBase):

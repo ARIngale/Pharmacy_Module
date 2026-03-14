@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func
 from datetime import date
 
-from models import Sale, Medicine, PurchaseOrder
+from app.models import Sale, Medicine, PurchaseOrder
 
 
 # Get today's sales summary

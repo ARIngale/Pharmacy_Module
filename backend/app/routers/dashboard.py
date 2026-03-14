@@ -2,9 +2,9 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from typing import List
 
-from database import get_db
-from services import dashboard_service
-from schemas import MedicineResponse, PurchaseOrderResponse
+from app.database import get_db
+from app.services import dashboard_service
+from app.schemas import MedicineResponse, PurchaseOrderResponse
 
 
 router = APIRouter()
