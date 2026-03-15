@@ -100,13 +100,13 @@ export default function Home() {
   if (error) return <div className="text-red-500">{error}</div>;
 
   return (
-    <div className="flex flex-col gap-6 bg-white rounded-xl shadow-sm p-6">
+    <div className="shadow-xl flex flex-col gap-6 bg-white rounded-xl p-6">
 
       {/* Title */}
       <div className="flex flex-row justify-between items-center">
 
         <div>
-          <h1 className="text-2xl font-semibold">
+          <h1 className="text-xl">
             Pharmacy CRM
           </h1>
 
@@ -119,15 +119,15 @@ export default function Home() {
 
           <button
               onClick={handleExport}
-              className="flex items-center gap-2 border-2 border-blue-500 rounded-xl text-blue-500 px-4 py-2"
+              className="flex items-center gap-2 border border-blue-200 rounded-xl text-pink-400 font-semibold px-4 py-2"
             >
               <Download size={16} /> Export
             </button>
 
 
-         <button
+          <button
             onClick={() => setOpenAddMedicine(true)}
-            className="flex items-center gap-2 rounded-xl text-white bg-blue-500 px-4 py-2"
+            className="flex items-center gap-2 rounded-xl text-white bg-gradient-to-r from-sky-700 to-blue-600 px-4 py-2"
           >
             <Plus size={16} /> Add Medicine
           </button>
@@ -146,7 +146,7 @@ export default function Home() {
           icon={DollarSign}
           badgeIcon={TrendingUp}
           growth="+12.5%"
-          iconBg="bg-green-500"
+          iconBg="bg-gradient-to-r from-green-500 to-green-700"
           badgeBg="bg-green-100"
           badgeText="text-green-600"
         />
@@ -156,7 +156,7 @@ export default function Home() {
           value={todaySalesCount}
           icon={ShoppingCart}
           growth="32 orders"
-          iconBg="bg-blue-600"
+          iconBg="bg-gradient-to-r from-blue-500 to-blue-700"
           badgeBg="bg-blue-100"
           badgeText="text-sky-800"
         />
@@ -166,7 +166,7 @@ export default function Home() {
           value={lowStockCount}
           icon={AlertTriangle}
           growth="Action Needed"
-          iconBg="bg-orange-500"
+          iconBg="bg-gradient-to-r from-orange-400 to-orange-500"
           badgeBg="bg-orange-100"
           badgeText="text-orange-700"
         />
@@ -176,7 +176,7 @@ export default function Home() {
           value={`₹${purchaseOrdersCount}`}
           icon={Truck}
           growth="5 pending"
-          iconBg="bg-sky-800"
+          iconBg="bg-gradient-to-r from-blue-600 to-sky-800"
           badgeBg="bg-sky-100"
           badgeText="text-blue-600"
         />

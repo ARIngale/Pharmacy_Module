@@ -210,10 +210,10 @@ export default function MakeSaleSection() {
       </div>
 
       {/* Cart Table */}
-      <table className="w-full bg-white border border-gray-300 rounded-xl text-sm">
+      <table className="w-full bg-white border border-gray-100 rounded-xl text-sm">
 
         {/* Header */}
-        <thead className="text-gray-600 text-[12px] font-semibold bg-gray-100">
+        <thead className="text-gray-600 text-[12px] font-semibold bg-white">
           <tr>
 
             <th className="p-2 text-left">MEDICINE NAME</th>
@@ -235,7 +235,7 @@ export default function MakeSaleSection() {
 
           {cart.map((item) => (
 
-            <tr key={item.id} className="border-t">
+            <tr key={item.id} className="">
 
               <td className="p-2">{item.name}</td>
 

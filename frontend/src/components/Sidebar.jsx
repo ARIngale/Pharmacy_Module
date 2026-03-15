@@ -28,7 +28,7 @@ const menuItems = [
 
 export default function Sidebar() {
   return (
-    <div className="w-20 bg-gray-100 shadow-lg flex flex-col items-center py-6 rounded-[3vw]">
+    <div className="w-20 bg-gray-100 shadow-xl flex flex-col items-center rounded-[1vw] h-screen">
 
       {/* Top menu icons */}
       <div className="flex flex-col gap-4">

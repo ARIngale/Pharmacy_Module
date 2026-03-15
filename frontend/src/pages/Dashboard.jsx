@@ -75,7 +75,7 @@ export default function Dashboard({ showSaleSection, showPurchase }) {
     <div className="flex items-center gap-4">
 
       {/* Icon */}
-      <div className="bg-green-500 p-3 rounded-xl">
+      <div className="bg-gradient-to-r from-green-500 to-orange-500 p-3 rounded-xl">
         <ShoppingCart className="text-white" size={18} />
       </div>
 
