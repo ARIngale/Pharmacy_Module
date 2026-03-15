@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 from typing import List
-
+from sqlalchemy import func
 from app.database import get_db
 from app.schemas import MedicineCreate, MedicineUpdate, MedicineResponse
 from app.services import inventory_service
-
+from app.models import Medicine
 
 router = APIRouter()
 
@@ -79,3 +79,26 @@ def filter_medicines(
     db: Session = Depends(get_db)
 ):
     return inventory_service.filter_medicines(db, status)
+
+@router.get("/summary")
+def inventory_summary(db: Session = Depends(get_db)):
+
+    total_items = db.query(func.count(Medicine.id)).scalar()
+
+    active_stock = db.query(func.count(Medicine.id))\
+        .filter(Medicine.status == "Active").scalar()
+
+    low_stock = db.query(func.count(Medicine.id))\
+        .filter(Medicine.status == "Low Stock").scalar()
+
+    total_value = db.query(func.sum(Medicine.price * Medicine.quantity)).scalar()
+
+    return {
+        "status": "success",
+        "data": {
+            "total_items": total_items,
+            "active_stock": active_stock,
+            "low_stock": low_stock,
+            "total_value": total_value or 0
+        }
+    }

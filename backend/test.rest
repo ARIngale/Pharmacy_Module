@@ -1,1 +1,125 @@
+### Add Medicine 1
+POST http://localhost:8000/inventory/medicines
+Content-Type: application/json
+
+{
+  "name": "Paracetamol",
+  "manufacturer": "Cipla",
+  "price": 20,
+  "quantity": 100,
+  "expiry_date": "2027-01-01",
+  "status": "Active"
+}
+
+### Add Medicine 2
+POST http://localhost:8000/inventory/medicines
+Content-Type: application/json
+
+{
+  "name": "Dolo 650",
+  "manufacturer": "Micro Labs",
+  "price": 15,
+  "quantity": 50,
+  "expiry_date": "2026-06-01",
+  "status": "Active"
+}
+
+### Add Medicine 3
+POST http://localhost:8000/inventory/medicines
+Content-Type: application/json
+
+{
+  "name": "Aspirin",
+  "manufacturer": "Bayer",
+  "price": 25,
+  "quantity": 10,
+  "expiry_date": "2025-12-01",
+  "status": "Low Stock"
+}
+
+### Get Medicines
+GET http://localhost:8000/inventory/medicines
+
+### Search Medicine
 GET http://localhost:8000/inventory/search?query=para
+### Filter Low Stock
+GET http://localhost:8000/inventory/filter?status=Low Stock
+### Update Medicine Quantity
+PUT http://localhost:8000/inventory/medicines/1
+Content-Type: application/json
+
+{
+  "name": "Paracetamol",
+  "manufacturer": "Cipla",
+  "price": 20,
+  "quantity": 120,
+  "expiry_date": "2027-01-01",
+  "status": "Active"
+}
+### Create Sale 1
+POST http://localhost:8000/dashboard/sale
+Content-Type: application/json
+
+{
+  "medicine_id": 1,
+  "quantity_sold": 2,
+  "patient_name": "Rahul Sharma",
+  "status": "Completed",
+  "total_price": 40
+}
+
+### Create Sale 2
+POST http://localhost:8000/dashboard/sale
+Content-Type: application/json
+
+{
+  "medicine_id": 2,
+  "quantity_sold": 3,
+  "patient_name": "Amit Verma",
+  "status": "Completed",
+  "total_price": 45
+}
+### Get Recent Sales
+GET http://localhost:8000/dashboard/recent-sales
+### Today's Sales Amount
+GET http://localhost:8000/dashboard/today-sales-amount
+
+
+### Today's Sales Count
+GET http://localhost:8000/dashboard/today-sales-count
+
+
+### Low Stock Count
+GET http://localhost:8000/dashboard/low-stock-count
+
+
+### Purchase Orders Count
+GET http://localhost:8000/dashboard/purchase-orders-count
+### Create Purchase Order 1
+POST http://localhost:8000/dashboard/purchase-orders
+Content-Type: application/json
+
+{
+  "medicine_name": "Paracetamol",
+  "quantity": 200,
+  "supplier": "ABC Pharma",
+  "total_cost": 3000
+}
+
+### Create Purchase Order 2
+POST http://localhost:8000/dashboard/purchase-orders
+Content-Type: application/json
+
+{
+  "medicine_name": "Dolo 650",
+  "quantity": 150,
+  "supplier": "MedSupply Ltd",
+  "total_cost": 2000
+}
+### Get Purchase Order Summary
+GET http://localhost:8000/dashboard/purchase-orders
+
+GET http://localhost:8000/inventory/summary
+
+
+

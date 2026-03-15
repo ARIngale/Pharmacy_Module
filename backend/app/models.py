@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, Date, DateTime
+from sqlalchemy import Column, Integer, String, Float,Date, DateTime, ForeignKey
 from sqlalchemy.sql import func
 from app.database import Base
 
@@ -20,10 +20,18 @@ class Sale(Base):
     __tablename__ = "sales"
 
     id = Column(Integer, primary_key=True, index=True)
-    medicine_id = Column(Integer, nullable=False)
-    quantity_sold = Column(Integer, nullable=False)
-    total_price = Column(Float, nullable=False)
-    sold_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    medicine_id = Column(Integer, ForeignKey("medicines.id"))
+
+    quantity_sold = Column(Integer)
+
+    patient_name = Column(String)
+
+    status = Column(String)
+
+    total_price = Column(Float)
+
+    sale_date = Column(DateTime, server_default=func.now())
 
 
 class PurchaseOrder(Base):

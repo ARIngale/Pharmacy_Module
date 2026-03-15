@@ -72,3 +72,70 @@ def get_purchase_order_summary(db: Session):
         "total_spent": total_spent or 0,
         "recent_orders": latest_orders
     }
+
+# Low stock count
+def get_low_stock_count(db: Session):
+    return db.query(Medicine).filter(
+        Medicine.status == "Low Stock"
+    ).count()
+
+
+# Purchase order count
+def get_purchase_order_count(db: Session):
+    return db.query(PurchaseOrder).count()
+
+
+# Recent sales
+def get_recent_sales(db: Session):
+    return (
+        db.query(Sale)
+        .order_by(Sale.sale_date.desc())
+        .limit(5)
+        .all()
+    )
+
+# Today's total sales amount
+def get_today_sales_amount(db: Session):
+    today = date.today()
+
+    total = db.query(func.sum(Sale.total_price)).filter(
+        func.date(Sale.sale_date) == today
+    ).scalar()
+
+    return total or 0
+
+
+# Today's sales transaction count
+def get_today_sales_count(db: Session):
+    today = date.today()
+
+    count = db.query(Sale).filter(
+        func.date(Sale.sale_date) == today
+    ).count()
+
+    return count
+
+
+def get_recent_sales(db: Session, limit: int = 5):
+    sales = (
+        db.query(Sale)
+        .order_by(Sale.sale_date.desc())
+        .limit(limit)
+        .all()
+    )
+
+    return sales
+
+def create_purchase_order(db: Session, order):
+    new_order = PurchaseOrder(
+        medicine_name=order.medicine_name,
+        quantity=order.quantity,
+        supplier=order.supplier,
+        total_cost=order.total_cost
+    )
+
+    db.add(new_order)
+    db.commit()
+    db.refresh(new_order)
+
+    return new_order

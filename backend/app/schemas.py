@@ -43,15 +43,24 @@ class MedicineResponse(MedicineBase):
 class SaleCreate(BaseModel):
     medicine_id: int
     quantity_sold: int
+    patient_name: str
+    status: str
     total_price: float
+    sale_date: Optional[datetime] = None
 
 
-class SaleResponse(SaleCreate):
+class SaleResponse(BaseModel):
     id: int
-    sold_at: datetime
+    medicine_id: int
+    quantity_sold: int
+    patient_name: str
+    status: str
+    total_price: float
+    sale_date: datetime
 
     class Config:
         from_attributes = True
+
 
 
 # Purchase Order Schemas
@@ -66,6 +75,11 @@ class PurchaseOrderCreate(BaseModel):
 class PurchaseOrderResponse(PurchaseOrderCreate):
     id: int
     order_date: datetime
+    medicine_name: str
+    quantity: int
+    supplier: Optional[str]
+    total_cost: float
+
 
     class Config:
         from_attributes = True

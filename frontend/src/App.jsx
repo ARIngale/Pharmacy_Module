@@ -1,14 +1,18 @@
-import { useState } from 'react'
-import './App.css'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import MainLayout from "./layout/MainLayout";
+
+import  Home from "./pages/Home"
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <h1 class="text-3xl font-bold underline">
-    Hello world!
-  </h1>
-  )
+    <BrowserRouter>
+      <MainLayout>
+        <Routes>
+          <Route path="/" element={<Home />} />
+        </Routes>
+      </MainLayout>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
