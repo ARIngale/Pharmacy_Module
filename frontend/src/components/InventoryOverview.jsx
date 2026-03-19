@@ -4,13 +4,13 @@ export default function InventoryOverview({ summary }) {
 
   return (
 
-    <div className="bg-sky-50 shadow-sm rounded-xl p-6">
+    <div className="bg-sky-50 shadow-sm rounded-xl p-4 sm:p-6">
 
-      <h2 className="text-lg font-semibold mb-4">
+      <h2 className="text-base sm:text-lg font-semibold mb-4">
         Inventory Overview
       </h2>
 
-      <div className="grid grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
 
         <Card
           label="Total Items"
@@ -47,14 +47,14 @@ export default function InventoryOverview({ summary }) {
 function Card({ label, value, icon }) {
 
   return (
-    <div className="bg-white rounded-xl p-4 shadow-sm flex justify-between items-center">
+    <div className="bg-white rounded-xl p-4 shadow-sm flex items-center justify-between gap-3">
 
-      <div>
-        <p className="text-sm text-gray-500">{label}</p>
-        <p className="text-xl font-semibold">{value}</p>
+      <div className="min-w-0">
+        <p className="text-xs sm:text-sm text-gray-500 truncate">{label}</p>
+        <p className="text-lg sm:text-xl font-semibold truncate">{value}</p>
       </div>
 
-      <div className="text-gray-400">
+      <div className="text-gray-400 shrink-0">
         {icon}
       </div>
 

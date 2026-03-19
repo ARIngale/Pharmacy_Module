@@ -24,13 +24,9 @@ export default function Inventory() {
         setSummary(sumRes.data.data);
 
       } catch (err) {
-
         console.error(err);
-
       } finally {
-
         setLoading(false);
-
       }
 
     }
@@ -39,17 +35,20 @@ export default function Inventory() {
 
   }, []);
 
-  if (loading) return <div>Loading inventory...</div>;
-        console.log(summary)
-
+  if (loading) return <div className="text-gray-500">Loading inventory...</div>;
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4 sm:gap-6 w-full">
 
-      <InventoryOverview summary={summary} />
+      {/* Overview Section */}
+      <div className="w-full">
+        <InventoryOverview summary={summary} />
+      </div>
 
-
-      <InventoryTable medicines={medicines} />
+      {/* Table Section */}
+      <div className="w-full">
+        <InventoryTable medicines={medicines} />
+      </div>
 
     </div>
   );

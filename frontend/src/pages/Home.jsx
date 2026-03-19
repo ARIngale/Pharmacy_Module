@@ -80,65 +80,62 @@ export default function Home() {
 
   const handleExport = async () => {
 
-  try {
+    try {
 
-    const res = await getMedicines();
+      const res = await getMedicines();
+      exportInventoryCSV(res.data);
 
-    exportInventoryCSV(res.data);
+    } catch (err) {
 
-  } catch (err) {
+      console.error(err);
+      alert("Failed to export inventory");
 
-    console.error(err);
-    alert("Failed to export inventory");
+    }
 
-  }
-
-};
+  };
 
 
   if (loading) return <div className="text-gray-500">Loading...</div>;
   if (error) return <div className="text-red-500">{error}</div>;
 
   return (
-    <div className="shadow-xl flex flex-col gap-6 bg-white rounded-xl p-6">
+    <div className="shadow-xl flex flex-col gap-6 bg-white rounded-xl p-4 sm:p-6">
 
-      {/* Title */}
-      <div className="flex flex-row justify-between items-center">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
 
         <div>
-          <h1 className="text-xl">
+          <h1 className="text-lg sm:text-xl font-semibold">
             Pharmacy CRM
           </h1>
 
-          <p className="text-gray-600 text-sm">
+          <p className="text-gray-600 text-xs sm:text-sm">
             Manage inventory, sales, and purchase orders
           </p>
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
 
           <button
-              onClick={handleExport}
-              className="flex items-center gap-2 border border-blue-200 rounded-xl text-pink-400 font-semibold px-4 py-2"
-            >
-              <Download size={16} /> Export
-            </button>
-
+            onClick={handleExport}
+            className="flex items-center justify-center gap-2 border border-blue-200 rounded-xl text-pink-400 font-semibold px-4 py-2 w-full sm:w-auto"
+          >
+            <Download size={16} /> Export
+          </button>
 
           <button
             onClick={() => setOpenAddMedicine(true)}
-            className="flex items-center gap-2 rounded-xl text-white bg-gradient-to-r from-sky-700 to-blue-600 px-4 py-2"
+            className="flex items-center justify-center gap-2 rounded-xl text-white bg-gradient-to-r from-sky-700 to-blue-600 px-4 py-2 w-full sm:w-auto"
           >
             <Plus size={16} /> Add Medicine
           </button>
-
 
         </div>
 
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
 
         <StatCard
           label="Today's Sales"
@@ -183,69 +180,61 @@ export default function Home() {
 
       </div>
 
-    <div className="bg-white round-2xl shadow-xl p-5">
-      <div className="flex justify-between items-center mb-5">
+      {/* Tabs Section */}
+      <div className="bg-white rounded-2xl shadow-xl p-4 sm:p-5">
 
-        <Tabs activeTab={activeTab} setActiveTab={setActiveTab}/>
+        <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4 mb-5">
 
-        <div className="flex gap-2">
+          <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
-        <button
-          onClick={() => setShowSaleSection(prev => !prev)}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm
-          ${activeTab === "sales"
-              ? "bg-gradient-to-r from-sky-600 to-blue-500 text-white"
-              : "bg-white border text-gray-700"
-          }`}
-        >
-          <Plus size={16} />
-          New Sale
-        </button>
+          <div className="flex flex-col sm:flex-row gap-2 w-full lg:w-auto lg:flex-nowrap">
 
+            <button
+              onClick={() => setShowSaleSection(prev => !prev)}
+              className={`flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm w-full sm:w-auto whitespace-nowrap
+              ${activeTab === "sales"
+                  ? "bg-gradient-to-r from-sky-600 to-blue-500 text-white"
+                  : "bg-white border text-gray-700"
+              }`}
+            >
+              <Plus size={16} />
+              New Sale
+            </button>
 
-       <button
-          onClick={() => setShowPurchase(!showPurchase)}
-          className="flex items-center gap-2 border px-4 py-2 rounded-lg text-sm bg-white"
-        >
-          <Plus size={16} />
-          New Purchase
-        </button>
+            <button
+              onClick={() => setShowPurchase(!showPurchase)}
+              className="flex items-center justify-center gap-2 border px-4 py-2 rounded-lg text-sm bg-white w-full sm:w-auto whitespace-nowrap"
+            >
+              <Plus size={16} />
+              New Purchase
+            </button>
 
+          </div>
 
+        </div>
+
+        <div className="flex flex-col gap-6">
+
+          {/* Tab Content */}
+          {activeTab === "sales" && (
+            <Dashboard showSaleSection={showSaleSection} showPurchase={showPurchase} />
+          )}
+
+          {activeTab === "purchase" && <div>Purchaces list will be here</div>}
+
+          {activeTab === "inventory" && <Inventory />}
 
         </div>
 
       </div>
 
-  
-
-
-        <div className="flex flex-col gap-6">
-
-
-            {/* Tab Content */}
-            {activeTab === "sales" && (
-              <Dashboard showSaleSection={showSaleSection} showPurchase={showPurchase} />
-            )}
-
-
-            {activeTab === "purchase" && <div>Purchaces list will be here</div>}
-
-            {activeTab === "inventory" && <Inventory />}
-
-        </div>
+      {/* Modal */}
+      <AddMedicineModal
+        open={openAddMedicine}
+        onClose={() => setOpenAddMedicine(false)}
+        onSuccess={() => window.location.reload()}
+      />
 
     </div>
-    <AddMedicineModal
-  open={openAddMedicine}
-  onClose={() => setOpenAddMedicine(false)}
-  onSuccess={() => window.location.reload()}
-/>
-
-
-
-    </div>
-
-    
   );
 }

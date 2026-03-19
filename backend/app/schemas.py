@@ -1,15 +1,17 @@
 from pydantic import BaseModel
 from datetime import date, datetime
-from typing import Optional
+from typing import List, Optional
 
-from pydantic import BaseModel
-from typing import Optional
-from datetime import date
 
 # Medicine Schemas
 
 class MedicineBase(BaseModel):
     name: str
+
+    generic_name: Optional[str] = None
+    category: Optional[str] = None
+    batch_no: Optional[str] = None
+    cost_price: Optional[float] = None
     manufacturer: Optional[str]
     price: float
     quantity: int
@@ -22,6 +24,9 @@ class MedicineCreate(MedicineBase):
 
 class MedicineUpdate(BaseModel):
     name: Optional[str] = None
+    generic_name: Optional[str] = None
+    category: Optional[str] = None
+    batch_no: Optional[str] = None
     manufacturer: Optional[str] = None
     price: Optional[float] = None
     quantity: Optional[int] = None
@@ -40,23 +45,37 @@ class MedicineResponse(MedicineBase):
 
 # Sales Schemas
 
-class SaleCreate(BaseModel):
+
+# SALE ITEM (EACH MEDICINE)
+class SaleItemCreate(BaseModel):
     medicine_id: int
-    quantity_sold: int
+    quantity: int
+
+
+class SaleItemResponse(BaseModel):
+    medicine_name: str
+    quantity: int
+    price: float
+    expiry_date: Optional[datetime]
+
+    class Config:
+        from_attributes = True
+
+
+# SALE (INVOICE)
+class SaleCreate(BaseModel):
     patient_name: str
-    status: str
-    total_price: float
-    sale_date: Optional[datetime] = None
+    payment_method: str  
+    items: List[SaleItemCreate]
 
 
 class SaleResponse(BaseModel):
     id: int
-    medicine_id: int
-    quantity_sold: int
     patient_name: str
-    status: str
+    payment_method: str
     total_price: float
     sale_date: datetime
+    items: List[SaleItemResponse]
 
     class Config:
         from_attributes = True

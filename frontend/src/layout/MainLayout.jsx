@@ -2,14 +2,25 @@ import Sidebar from "../components/Sidebar";
 
 export default function MainLayout({ children }) {
   return (
-    <div className="flex min-h-screen bg-gray-100 pl-24">
-      <div className="fixed left-0 top-0 p-4">
+    <div className="flex min-h-screen bg-gray-100">
+
+      {/* Sidebar */}
+      <div className="
+        fixed 
+        bottom-0 left-0 w-full h-16 
+        md:top-0 md:left-0 md:h-screen md:w-20 
+        z-50
+      ">
         <Sidebar />
       </div>
 
-      <div className="flex-1 p-6">
-        {children}
-      </div>
+      {/* Main Content */}
+      <div className="w-full p-4 sm:p-6 md:pl-24 overflow-x-auto">
+  <div className="min-w-0">
+    {children}
+  </div>
+</div>
+
     </div>
   );
 }

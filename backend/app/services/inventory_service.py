@@ -22,7 +22,7 @@ def calculate_status(quantity: int, expiry_date):
     return "Active"
 
 
-# List medicines
+#  List medicines
 def get_medicines(db: Session):
     return db.query(Medicine).all()
 
@@ -33,7 +33,11 @@ def create_medicine(db: Session, medicine: MedicineCreate):
 
     new_medicine = Medicine(
         name=medicine.name,
+        generic_name=medicine.generic_name,
+        category=medicine.category,
+        batch_no=medicine.batch_no,
         manufacturer=medicine.manufacturer,
+        cost_price = medicine.cost_price,
         price=medicine.price,
         quantity=medicine.quantity,
         expiry_date=medicine.expiry_date,
@@ -59,6 +63,7 @@ def update_medicine(db: Session, medicine_id: int, medicine_data: MedicineUpdate
     for key, value in update_data.items():
         setattr(medicine, key, value)
 
+    # Recalculate status
     medicine.status = calculate_status(
         medicine.quantity,
         medicine.expiry_date
@@ -70,7 +75,7 @@ def update_medicine(db: Session, medicine_id: int, medicine_data: MedicineUpdate
     return medicine
 
 
-# Mark expired or out-of-stock
+# Update status manually
 def update_medicine_status(db: Session, medicine_id: int, status: str):
     medicine = db.query(Medicine).filter(Medicine.id == medicine_id).first()
 
@@ -85,23 +90,30 @@ def update_medicine_status(db: Session, medicine_id: int, status: str):
     return medicine
 
 
-# Search medicines by name
+# Search medicines (IMPROVED 🔥)
 def search_medicines(db: Session, query: str):
     return db.query(Medicine).filter(
-        Medicine.name.ilike(f"%{query}%")
+        (Medicine.name.ilike(f"%{query}%")) |
+        (Medicine.generic_name.ilike(f"%{query}%"))
     ).all()
 
 
-# Filter medicines by status
+# Filter medicines
 def filter_medicines(db: Session, status: str):
     if status == "Low Stock":
-        return db.query(Medicine).filter(Medicine.quantity < 20, Medicine.quantity > 0).all()
+        return db.query(Medicine).filter(
+            Medicine.quantity < LOW_STOCK_THRESHOLD,
+            Medicine.quantity > 0
+        ).all()
 
     if status == "Out of Stock":
-        return db.query(Medicine).filter(Medicine.quantity == 0).all()
+        return db.query(Medicine).filter(
+            Medicine.quantity == 0
+        ).all()
 
-    return db.query(Medicine).filter(Medicine.status == status).all()
-
+    return db.query(Medicine).filter(
+        Medicine.status == status
+    ).all()
 
 
 # Get low stock medicines

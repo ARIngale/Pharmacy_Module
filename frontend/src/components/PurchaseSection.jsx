@@ -51,9 +51,9 @@ export default function PurchaseSection() {
   };
 
   return (
-    <div className="bg-orange-50 border border-orange-200 rounded-xl p-6 flex flex-col gap-4">
+    <div className="bg-orange-50 border border-orange-200 rounded-xl p-4 sm:p-6 flex flex-col gap-4">
 
-      <h2 className="text-lg font-semibold">
+      <h2 className="text-base sm:text-lg font-semibold">
         Create Purchase Order
       </h2>
 
@@ -69,14 +69,15 @@ export default function PurchaseSection() {
         </div>
       )}
 
-      <div className="grid grid-cols-4 gap-4">
+      {/* Responsive Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
 
         <input
           name="medicine_name"
           placeholder="Medicine Name"
           value={form.medicine_name}
           onChange={handleChange}
-          className="border p-2 rounded"
+          className="border p-2 rounded w-full"
         />
 
         <input
@@ -85,7 +86,7 @@ export default function PurchaseSection() {
           placeholder="Quantity"
           value={form.quantity}
           onChange={handleChange}
-          className="border p-2 rounded"
+          className="border p-2 rounded w-full"
         />
 
         <input
@@ -93,7 +94,7 @@ export default function PurchaseSection() {
           placeholder="Supplier"
           value={form.supplier}
           onChange={handleChange}
-          className="border p-2 rounded"
+          className="border p-2 rounded w-full"
         />
 
         <input
@@ -102,14 +103,15 @@ export default function PurchaseSection() {
           placeholder="Total Cost"
           value={form.total_cost}
           onChange={handleChange}
-          className="border p-2 rounded"
+          className="border p-2 rounded w-full"
         />
 
       </div>
 
+      {/* Button */}
       <button
         onClick={handleSubmit}
-        className="bg-blue-500 text-white px-6 py-2 rounded-lg w-fit"
+        className="bg-blue-500 text-white px-6 py-2 rounded-lg w-full sm:w-fit"
       >
         Create Purchase
       </button>

@@ -28,11 +28,25 @@ const menuItems = [
 
 export default function Sidebar() {
   return (
-    <div className="w-20 bg-gray-100 shadow-xl flex flex-col items-center rounded-[1vw] h-screen">
+    <div
+      className="
+        bg-gray-100 shadow-xl flex 
+        md:flex-col md:items-center 
+        justify-around md:justify-start
+        h-full md:h-screen w-full md:w-20
+        rounded-none md:rounded-[1vw]
+        px-2 md:px-0 py-2 md:py-4
+      "
+    >
 
-      {/* Top menu icons */}
-      <div className="flex flex-col gap-4">
-
+      {/* Menu Icons */}
+      <div className="
+        flex 
+        flex-row md:flex-col 
+        gap-2 md:gap-4 
+        items-center justify-around md:justify-start 
+        w-full
+      ">
         {menuItems.map((item, index) => {
           const Icon = item.icon;
           const isPlus = item.icon === Plus;
@@ -41,27 +55,23 @@ export default function Sidebar() {
             <NavLink
               key={index}
               to={item.path}
-              className={`p-3 transition 
+              className={`p-2 md:p-3 transition 
                 ${isPlus
                   ? "bg-white rounded-full shadow-sm"
                   : "hover:bg-white hover:rounded-full"}
               `}
             >
-              <Icon size={15} />
+              <Icon size={18} />
             </NavLink>
           );
         })}
-
       </div>
 
-      {/* Spacer */}
-      <div className="flex-1 flex items-center justify-center">
-
-        {/* Settings icon */}
+      {/* Settings (hidden on mobile for space) */}
+      <div className="hidden md:flex flex-1 items-center justify-center">
         <div className="p-3 hover:bg-white hover:rounded-full transition">
-          <Settings size={15} />
+          <Settings size={18} />
         </div>
-
       </div>
 
     </div>

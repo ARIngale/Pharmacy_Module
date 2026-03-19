@@ -7,27 +7,47 @@ export function exportInventoryCSV(medicines) {
 
   const headers = [
     "ID",
-    "Name",
+    "Medicine Name",
+    "Generic Name",
+    "Category",
+    "Batch No",
     "Manufacturer",
-    "Price",
+    "Cost Price",
+    "MRP",
     "Quantity",
+    "Stock Value",
     "Expiry Date",
     "Status"
   ];
 
-  const rows = medicines.map(m => [
-    m.id,
-    m.name,
-    m.manufacturer,
-    m.price,
-    m.quantity,
-    m.expiry_date,
-    m.status
-  ]);
+  const rows = medicines.map(m => {
 
+    const stockValue = (m.cost_price || 0) * (m.quantity || 0);
+
+    return [
+      m.id,
+      m.name,
+      m.generic_name || "-",
+      m.category || "-",
+      m.batch_no || "-",
+      m.manufacturer || "-",
+      m.cost_price || 0,
+      m.price || 0,
+      m.quantity || 0,
+      stockValue,
+      m.expiry_date
+        ? new Date(m.expiry_date).toLocaleDateString()
+        : "-",
+      m.status
+    ];
+  });
+
+  // Handle commas properly
   const csvContent =
     [headers, ...rows]
-      .map(row => row.join(","))
+      .map(row =>
+        row.map(value => `"${value}"`).join(",")
+      )
       .join("\n");
 
   const blob = new Blob([csvContent], { type: "text/csv" });
@@ -40,6 +60,5 @@ export function exportInventoryCSV(medicines) {
 
   document.body.appendChild(link);
   link.click();
-
   document.body.removeChild(link);
 }

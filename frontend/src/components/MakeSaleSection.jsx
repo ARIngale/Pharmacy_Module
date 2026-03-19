@@ -7,6 +7,7 @@ export default function MakeSaleSection() {
   const [medicines, setMedicines] = useState([]);
   const [search, setSearch] = useState("");
   const [patientId, setPatientId] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("Cash");
 
   const [filteredMedicines, setFilteredMedicines] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -29,13 +30,12 @@ export default function MakeSaleSection() {
     fetchMedicines();
   }, []);
 
-  // Search medicines
   const handleSearch = (value) => {
-
     setSearch(value);
 
     if (!value) {
       setFilteredMedicines([]);
+      setShowDropdown(false);
       return;
     }
 
@@ -47,87 +47,82 @@ export default function MakeSaleSection() {
     setShowDropdown(true);
   };
 
-  // Add medicine to cart
   const addMedicine = (medicine) => {
-
     const exists = cart.find((item) => item.id === medicine.id);
-
     if (exists) return;
 
     setCart([
       ...cart,
-      {
-        ...medicine,
-        quantity: 1
-      }
+      { ...medicine, quantity: 1 }
     ]);
 
     setSearch("");
     setShowDropdown(false);
   };
 
-  // Update quantity
   const updateQuantity = (id, value) => {
+    const qty = Math.max(1, Number(value));
 
     setCart(
       cart.map((item) =>
-        item.id === id
-          ? { ...item, quantity: Number(value) }
-          : item
+        item.id === id ? { ...item, quantity: qty } : item
       )
     );
   };
 
-  // Remove item
   const removeItem = (id) => {
     setCart(cart.filter((item) => item.id !== id));
   };
 
-  // Bill
+  const totalBill = cart.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
+
   const handleBill = async () => {
+
+    if (cart.length === 0) {
+      setError("Cart is empty");
+      return;
+    }
+
+    if (!patientId) {
+      setError("Enter patient name");
+      return;
+    }
 
     try {
 
-      for (const item of cart) {
-
-        await createSale({
+      await createSale({
+        patient_name: patientId,
+        payment_method: paymentMethod,
+        items: cart.map(item => ({
           medicine_id: item.id,
-          quantity_sold: item.quantity,
-          patient_name: patientId,
-          status: "Completed",
-          total_price: totalBill
-        });
-
-      }
+          quantity: Number(item.quantity)
+        }))
+      });
 
       setSuccess("Sale completed successfully");
       setError("");
+
       setCart([]);
       setPatientId("");
 
     } catch (err) {
-
       console.error(err);
       setError("Failed to complete sale");
       setSuccess("");
-
     }
 
   };
 
-  const totalBill = cart.reduce(
-  (total, item) => total + item.price * item.quantity,
-  0
-);
-
-
   return (
-    <div className="bg-sky-50 border border-sky-200 rounded-xl p-6 flex flex-col gap-5">
+    <div className="bg-sky-50 border border-sky-200 rounded-xl p-4 sm:p-6 flex flex-col gap-5">
 
       {/* Title */}
       <div>
-        <p className="text-lg text-gray-900">Make a Sale</p>
-        <p className="text-gray-600">Select medicines from inventory</p>
+        <p className="text-base sm:text-lg text-gray-900">Make a Sale</p>
+        <p className="text-sm text-gray-600">Select medicines from inventory</p>
       </div>
 
       {/* Messages */}
@@ -144,21 +139,21 @@ export default function MakeSaleSection() {
       )}
 
       {/* Inputs */}
-      <div className="flex items-center gap-4 relative">
+      <div className="flex flex-col lg:flex-row gap-3 lg:items-center relative">
 
-        {/* Patient ID */}
+        {/* Patient */}
         <input
           type="text"
-          placeholder="Patient Id"
+          placeholder="Patient Name"
           value={patientId}
           onChange={(e) => setPatientId(e.target.value)}
-          className="bg-white shadow-md px-4 py-1.5 rounded-lg outline-none w-[170px]"
+          className="bg-white shadow-md px-4 py-2 rounded-lg outline-none w-full lg:w-[170px]"
         />
 
-        {/* Search Medicine */}
-        <div className="relative w-[280px]">
+        {/* Search */}
+        <div className="relative w-full lg:w-[280px]">
 
-          <div className="flex items-center bg-white shadow-md px-3 py-1.5 rounded-lg">
+          <div className="flex items-center bg-white shadow-md px-3 py-2 rounded-lg">
             <Search size={16} className="text-gray-400 mr-2" />
 
             <input
@@ -170,12 +165,10 @@ export default function MakeSaleSection() {
             />
           </div>
 
-          {/* Dropdown */}
           {showDropdown && filteredMedicines.length > 0 && (
-            <div className="absolute top-9 left-0 w-full bg-white border rounded-lg shadow-lg z-10">
+            <div className="absolute top-10 left-0 w-full bg-white border rounded-lg shadow-lg z-10 max-h-40 overflow-y-auto">
 
               {filteredMedicines.map((med) => (
-
                 <div
                   key={med.id}
                   onClick={() => addMedicine(med)}
@@ -183,7 +176,6 @@ export default function MakeSaleSection() {
                 >
                   {med.name}
                 </div>
-
               ))}
 
             </div>
@@ -191,114 +183,112 @@ export default function MakeSaleSection() {
 
         </div>
 
-        {/* Bill Button */}
-      <button
-        onClick={handleBill}
-        disabled={cart.length === 0 || !patientId}
-        className={`ml-auto px-9 py-1.5 rounded-lg text-white
-        ${
-          cart.length === 0 || !patientId
-            ? "bg-orange-500 cursor-not-allowed"
-            : "bg-red-600 hover:bg-red-700"
-        }`}
-      >
-        Bill
-      </button>
+        {/* Payment */}
+        <select
+          value={paymentMethod}
+          onChange={(e) => setPaymentMethod(e.target.value)}
+          className="border px-3 py-2 rounded-lg w-full lg:w-auto"
+        >
+          <option>Cash</option>
+          <option>Card</option>
+          <option>UPI</option>
+        </select>
 
-
+        {/* Bill */}
+        <button
+          onClick={handleBill}
+          disabled={cart.length === 0 || !patientId}
+          className={`px-6 py-2 rounded-lg text-white w-full lg:w-auto lg:ml-auto
+          ${
+            cart.length === 0 || !patientId
+              ? "bg-orange-400 cursor-not-allowed"
+              : "bg-red-600 hover:bg-red-700"
+          }`}
+        >
+          Bill
+        </button>
 
       </div>
 
       {/* Cart Table */}
-      <table className="w-full bg-white border border-gray-100 rounded-xl text-sm">
+      <div className="overflow-x-auto">
+        <table className="min-w-[800px] w-full bg-white border border-gray-100 rounded-xl text-sm">
 
-        {/* Header */}
-        <thead className="text-gray-600 text-[12px] font-semibold bg-white">
-          <tr>
-
-            <th className="p-2 text-left">MEDICINE NAME</th>
-            <th className="p-2 text-left">GENERIC NAME</th>
-            <th className="p-2 text-left">BATCH NO</th>
-            <th className="p-2 text-left">EXPIRY DATE</th>
-            <th className="p-2 text-left">QUANTITY</th>
-            <th className="p-2 text-left">MRP / PRICE</th>
-            <th className="p-2 text-left">SUPPLIER</th>
-            <th className="p-2 text-left">STATUS</th>
-            <th className="p-2 text-left">ACTIONS</th>
-
-          </tr>
-        </thead>
-
-
-        {/* Body */}
-        <tbody>
-
-          {cart.map((item) => (
-
-            <tr key={item.id} className="">
-
-              <td className="p-2">{item.name}</td>
-
-              <td className="p-2">{item.generic_name || "-"}</td>
-
-              <td className="p-2">{item.batch_no || "-"}</td>
-
-              <td className="p-2">{item.expiry_date}</td>
-
-              <td className="p-2">
-
-                <input
-                  type="number"
-                  min="1"
-                  value={item.quantity}
-                  onChange={(e) =>
-                    updateQuantity(item.id, e.target.value)
-                  }
-                  className="w-16 border rounded px-2 py-1"
-                />
-
-              </td>
-
-              <td className="p-2">₹{item.price}</td>
-
-              <td className="p-2">{item.manufacturer}</td>
-
-              <td className="p-2">
-
-                <span className="bg-green-100 text-green-700 px-2 py-1 rounded text-xs">
-                  {item.status}
-                </span>
-
-              </td>
-
-              <td className="p-2">
-
-                <button
-                  onClick={() => removeItem(item.id)}
-                  className="text-red-500 hover:text-red-700"
-                >
-                  Remove
-                </button>
-
-              </td>
-
+          <thead className="text-gray-600 text-[12px] font-semibold">
+            <tr>
+              <th className="p-2 text-left">MEDICINE</th>
+              <th className="p-2">GENERIC</th>
+              <th className="p-2">BATCH</th>
+              <th className="p-2">EXPIRY</th>
+              <th className="p-2">QTY</th>
+              <th className="p-2">PRICE</th>
+              <th className="p-2">SUPPLIER</th>
+              <th className="p-2">STATUS</th>
+              <th className="p-2">ACTION</th>
             </tr>
+          </thead>
 
-          ))}
+          <tbody>
 
-        </tbody>
+            {cart.map((item) => (
 
-      </table>
+              <tr key={item.id} className="border-t">
 
+                <td className="p-2 whitespace-nowrap">{item.name}</td>
+                <td className="p-2 whitespace-nowrap">{item.generic_name || "-"}</td>
+                <td className="p-2 whitespace-nowrap">{item.batch_no || "-"}</td>
 
+                <td className="p-2 whitespace-nowrap">
+                  {item.expiry_date
+                    ? new Date(item.expiry_date).toLocaleDateString()
+                    : "-"}
+                </td>
 
-<div className="flex justify-end items-center gap-4 mt-4">
+                <td className="p-2">
+                  <input
+                    type="number"
+                    min="1"
+                    value={item.quantity}
+                    onChange={(e) =>
+                      updateQuantity(item.id, e.target.value)
+                    }
+                    className="w-16 border rounded px-2 py-1"
+                  />
+                </td>
 
-  <span className="text-lg font-semibold text-gray-700">
-    Total: ₹{totalBill}
-  </span>
+                <td className="p-2 whitespace-nowrap">₹{item.price}</td>
+                <td className="p-2 whitespace-nowrap">{item.manufacturer}</td>
 
-</div>
+                <td className="p-2 whitespace-nowrap">
+                  <span className="bg-green-100 text-green-700 px-2 py-1 rounded text-xs">
+                    {item.status}
+                  </span>
+                </td>
+
+                <td className="p-2 whitespace-nowrap">
+                  <button
+                    onClick={() => removeItem(item.id)}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    Remove
+                  </button>
+                </td>
+
+              </tr>
+
+            ))}
+
+          </tbody>
+
+        </table>
+      </div>
+
+      {/* Total */}
+      <div className="flex justify-end mt-4">
+        <span className="text-base sm:text-lg font-semibold">
+          Total: ₹{totalBill}
+        </span>
+      </div>
 
     </div>
   );
